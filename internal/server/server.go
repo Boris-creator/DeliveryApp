@@ -12,11 +12,15 @@ import (
 )
 
 func StartServer() {
-	cfg, err := config.LoadConfig()
+	err := config.LoadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	c, _ := models.Connect(cfg)
+	cfg := config.Config
+	c, err := models.Connect(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer c.Close()
 
 	r := router.MakeRouter()

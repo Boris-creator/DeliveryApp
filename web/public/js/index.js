@@ -1,13 +1,15 @@
-console.log('It\'s here beacuse "index.js" is included in IndexNames');
-
-fetch('http://localhost:3000/api/v1/suggest',
-{
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        query: 'test'
+document.addEventListener('DOMContentLoaded', () => {
+    document.forms[0].addEventListener('submit', e => {
+        e.preventDefault()
+        const data = new FormData(e.target)
+        const address = JSON.parse(data.get('address') || '{}')
+        fetch('/api/v1/order', {
+            method: 'POST',
+            body: JSON.stringify({
+                address,
+                time: data.get('time'),
+                comment: data.get('comment') || '',
+            })
+        })
     })
-}
-)
+})

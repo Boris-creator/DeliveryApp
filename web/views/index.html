@@ -3,28 +3,53 @@
     <head>
         <meta charset="UTF-8">
         <title>{{ .Title }}</title>
+        <link rel="stylesheet" href="/css/form.css">
         <link rel="stylesheet" href="/css/auto-suggest.css">
         <script src="/js"></script>
         <script src="/js/auto-suggest.js"></script>
     </head>
     <body>
         <h1>{{ .Content }}</h1>
-        <div class="suggest__container form-group">
-            <label>
-                    <span class="form-label">
-                        title
+        <form class="form-rows">
+            <div class="suggest__container form-group">
+                <label>
+                    <span class="form-label form-label--required">
+                        Your address
                     </span>
+                    <input
+                        class="form-control"
+                        name="query"
+                        data-url="/api/v1/suggest-address"
+                    >
+                </label>
+                <div
+                    class="suggest__dropdown suggest__dropdown--hidden"
+                    data-option-label="fullAddress"
+                    data-option-value="*"
+                ></div>
                 <input
-                    class="form-control"
-                    name="query"
-                    data-url="/api/v1/suggest-address"
+                    type="hidden"
+                    class="suggest__field"
+                    name="address"
                 >
-            </label>
-            <div
-                class="suggest__dropdown suggest__dropdown--hidden"
-                data-option-label="value"
-                data-option-value="value"
-            ></div>
-        </div>
+            </div>
+            <div class="form-group">
+                <label>
+                    <span class="form-label form-label--required">
+                        Select time
+                    </span>
+                    <input type="datetime-local" name="time">
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <span class="form-label">
+                        Comment if needed
+                    </span>
+                    <textarea name="comment" style="resize:vertical"></textarea>
+                </label>
+            </div>
+            <button>Submit</button>
+        </form>
     </body>
 </html>

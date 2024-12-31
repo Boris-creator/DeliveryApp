@@ -5,6 +5,6 @@ type AddressData struct {
 	GeoLon string `json:"geo_lon"`
 }
 type resource struct {
-	Value string      `json:"value"`
+	Value string      `json:"fullAddress"`
 	Data  AddressData `json:"data"`
 }

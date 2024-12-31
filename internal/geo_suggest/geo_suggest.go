@@ -38,6 +38,10 @@ func (s *server) Suggest(_ context.Context, req *geo_suggest_pb.QueryRequest) (*
 	for _, address := range result {
 		suggestions = append(suggestions, &geo_suggest_pb.SuggestResponse_Result{
 			Value: address.Value,
+			Data: map[string]string{
+				"geo_lat": address.Data.GeoLat,
+				"geo_lon": address.Data.GeoLon,
+			},
 		})
 	}
 	res := geo_suggest_pb.SuggestResponse{

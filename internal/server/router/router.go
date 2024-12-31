@@ -6,6 +6,8 @@ import (
 	"log"
 
 	"playground/internal/server/api/address_suggest"
+	"playground/internal/server/api/orders"
+	"playground/internal/server/middleware"
 
 	"github.com/fasthttp/router"
 	"github.com/valyala/fasthttp"
@@ -21,6 +23,7 @@ func MakeRouter() *router.Router {
 func apiRoutes(r *router.Router) {
 	api := r.Group("/api/v1")
 	api.POST("/suggest-address", address_suggest.HandleSuggest)
+	api.POST("/order", middleware.Validate[orders.SaveOrderRequest](orders.SaveOrder))
 }
 
 func webRoutes(r *router.Router) {
@@ -34,7 +37,7 @@ func webRoutes(r *router.Router) {
 		tmpl.Execute(ctx, struct {
 			Title   string
 			Content string
-		}{"Hello World!", "Test"})
+		}{"Main Page", "Order form"})
 	})
 	r.ServeFilesCustom("/{filepath:*}", &fasthttp.FS{
 		Root:               "web/public",

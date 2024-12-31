@@ -30,7 +30,6 @@ function debounce(func, timeout = 300) {
   }
   
   const setOptions = (options, label, dropdown) => {
-    console.log(options)
     dropdown.innerHTML = ''
     options.forEach(option => {
       const optionElement = document.createElement('div')

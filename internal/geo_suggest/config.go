@@ -8,7 +8,7 @@ import (
 )
 
 type config struct {
-	Port string `env:"GEO_SUGGEST_SERVER_PORT"`
+	Port string `env:"SERVER_PORT"`
 }
 
 func LoadConfig() (config, error) {

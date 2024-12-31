@@ -2,6 +2,34 @@ name: 'playground'
 
 services:
   server:
-    build: .
+    build:
+      context: ./
+      dockerfile: ./docker/server/Dockerfile
     ports:
-      - "3000:3000"
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db
+  db:
+    build:
+      context: ./
+      dockerfile: ./docker/db/Dockerfile
+    ports:
+      - "5433:${DB_PORT}"
+    env_file: ".env"
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - GEO_SUGGEST_SERVER_HOST=geo-suggest
+      - DB_HOST=db
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USER} -d ${DB_NAME}'"]
+      interval: 10s
+      timeout: 30s
+      retries: 3
+
+  geo-suggest:
+    env_file: "./internal/geo_suggest/.env"
+    build:
+      context: ./
+      dockerfile: ./docker/geo-suggest/Dockerfile
+    ports:
+      - "${GEO_SUGGEST_SERVER_PORT}:${GEO_SUGGEST_SERVER_PORT}"

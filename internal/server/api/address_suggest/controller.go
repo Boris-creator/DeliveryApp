@@ -1,7 +1,9 @@
 package address_suggest
 
 import (
+	"fmt"
 	"log"
+	"playground/internal/config"
 	"playground/internal/server/api"
 	geo_suggest_pb "playground/proto/geo-suggest"
 
@@ -15,7 +17,10 @@ import (
 func HandleSuggest(ctx *fasthttp.RequestCtx) {
 	req, _ := api.ReadRequest[suggestRequest](ctx)
 
-	conn, err := grpc.NewClient(":8085", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(
+		fmt.Sprintf("%s:%s", config.Config.GeoSuggestHost, config.Config.GeoSuggestPort),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
