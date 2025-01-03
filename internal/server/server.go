@@ -30,6 +30,8 @@ func StartServer() {
 		Name:    "Playground",
 	}
 
+	registerEventsListeners()
+
 	if err := s.ListenAndServe(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)); err != nil {
 		log.Fatalf("error in ListenAndServe: %v", err)
 	}

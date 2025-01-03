@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('/api/v1/order', {
             method: 'POST',
             body: JSON.stringify({
-                address,
+                address: {...address, ...address.data},
                 time: data.get('time'),
                 comment: data.get('comment') || '',
             })

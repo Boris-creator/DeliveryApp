@@ -7,8 +7,8 @@ import (
 
 type address struct {
 	FullAddress string `json:"fullAddress"`
-	GeoLat      string `json:"geoLat"`
-	GeoLon      string `json:"geoLon"`
+	GeoLat      string `json:"geo_lat"`
+	GeoLon      string `json:"geo_lon"`
 }
 
 func (addr address) Address() addresses.Address {
@@ -23,6 +23,6 @@ func (addr address) Address() addresses.Address {
 
 type SaveOrderRequest struct {
 	Address address `json:"address" validate:"required"`
-	Time    string  `json:"time" validate:"required,datetime=2006-01-02T15:04`
+	Time    string  `json:"time" validate:"required,datetime=2006-01-02T15:04"`
 	Comment string  `json:"comment" validate:"gte=2,lte=250"`
 }
