@@ -3,8 +3,8 @@ package router
 import (
 	"fmt"
 	"html/template"
-	"log"
 
+	"playground/internal/logger"
 	"playground/internal/server/api/address_suggest"
 	"playground/internal/server/api/orders"
 	"playground/internal/server/middleware"
@@ -30,7 +30,7 @@ func webRoutes(r *router.Router) {
 	r.GET("/", func(ctx *fasthttp.RequestCtx) {
 		tmpl, err := template.ParseFiles("web/views/index.html")
 		if err != nil {
-			log.Println(err)
+			logger.Error(err)
 			return
 		}
 		ctx.SetContentType("text/html")

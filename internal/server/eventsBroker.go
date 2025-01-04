@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"log"
+	"playground/internal/logger"
 	"playground/internal/models"
 	"playground/internal/services/orders"
 	"playground/internal/services/works"
@@ -15,7 +15,7 @@ func registerEventsListeners() {
 		o := e.Payload.(orders.Order)
 		ws, err := models.FindNearestWorkshop(o.Address.GeoLat, o.Address.GeoLon)
 		if err != nil {
-			log.Println(err)
+			logger.Error(err)
 			return
 		}
 		wm := models.NewWorkModel()
@@ -27,7 +27,7 @@ func registerEventsListeners() {
 		}
 		_, err = wm.Create()
 		if err != nil {
-			log.Println(err)
+			logger.Error(err)
 		}
 	})
 	// l.Listen() // not necessary when running from main function
