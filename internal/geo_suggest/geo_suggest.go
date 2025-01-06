@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	stability "playground/pkg/utils"
 	geo_suggest_pb "playground/proto/geo-suggest"
 
 	dadata "github.com/ekomobile/dadata/v2"
@@ -18,7 +19,13 @@ type server struct {
 	geo_suggest_pb.UnimplementedAddressSuggestServiceServer
 }
 
-func (s *server) Suggest(_ context.Context, req *geo_suggest_pb.QueryRequest) (*geo_suggest_pb.SuggestResponse, error) {
+var suggestAddress = stability.Retry[suggest.RequestParams, []*suggest.AddressSuggestion](
+	func(ctx context.Context, params suggest.RequestParams) ([]*suggest.AddressSuggestion, error) {
+		return api.Address(ctx, &params)
+	}, 3, 1,
+)
+
+func (s *server) Suggest(ctx context.Context, req *geo_suggest_pb.QueryRequest) (*geo_suggest_pb.SuggestResponse, error) {
 	params := suggest.RequestParams{
 		Query: req.Query,
 		FromBound: &suggest.Bound{
@@ -29,7 +36,7 @@ func (s *server) Suggest(_ context.Context, req *geo_suggest_pb.QueryRequest) (*
 		},
 	}
 
-	result, err := api.Address(context.Background(), &params)
+	result, err := suggestAddress(ctx, params)
 	if err != nil {
 		return nil, err
 	}

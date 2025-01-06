@@ -22,7 +22,7 @@ func MakeRouter() *router.Router {
 
 func apiRoutes(r *router.Router) {
 	api := r.Group("/api/v1")
-	api.POST("/suggest-address", address_suggest.HandleSuggest)
+	api.POST("/suggest-address", middleware.Throttle(address_suggest.HandleSuggest))
 	api.POST("/order", middleware.Validate[orders.SaveOrderRequest](orders.SaveOrder))
 }
 

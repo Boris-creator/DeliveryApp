@@ -34,5 +34,6 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	golang.org/x/time v0.9.0
 	google.golang.org/grpc v1.68.1
 )
