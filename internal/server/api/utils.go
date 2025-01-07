@@ -2,6 +2,9 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
+	"playground/pkg/ioutils"
+	"strings"
 
 	"github.com/valyala/fasthttp"
 )
@@ -14,8 +17,17 @@ func JsonResponse(ctx *fasthttp.RequestCtx, data any) {
 
 func ReadRequest[data any](ctx *fasthttp.RequestCtx) (data, error) {
 	var rq data
-	err := json.Unmarshal(ctx.PostBody(), &rq)
-	return rq, err
+	ct := ctx.Request.Header.ContentType()
+	if strings.HasPrefix(string(ct), "application/json") || strings.HasPrefix(string(ct), "text/plain") {
+		err := json.Unmarshal(ctx.PostBody(), &rq)
+		return rq, err
+	}
+	if strings.HasPrefix(string(ct), "multipart/form-data") {
+		mf, _ := ctx.MultipartForm()
+		err := ioutils.ReadFormToStruct(mf, &rq)
+		return rq, err
+	}
+	return rq, errors.New("unsupported request content type")
 }
 
 func ErrorResponse(ctx *fasthttp.RequestCtx, err error) {

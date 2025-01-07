@@ -86,10 +86,14 @@ func getColumnNames(s any) []string {
 		return []string{}
 	}
 	for i := 0; i < v.NumField(); i++ {
-		key, ok := v.Type().Field(i).Tag.Lookup("db")
-		sqlKey, _ := v.Type().Field(i).Tag.Lookup("sql")
+		f := v.Type().Field(i)
+		if !f.IsExported() {
+			continue
+		}
+		key, ok := f.Tag.Lookup("db")
+		sqlKey, _ := f.Tag.Lookup("sql")
 		if !ok {
-			key = v.Type().Field(i).Name
+			key = f.Name
 		}
 		if key != "" && key != "-" && sqlKey != "omit_on_insert" {
 			columns = append(columns, key)

@@ -16,6 +16,8 @@ func Validate[Rules any](rh fasthttp.RequestHandler) fasthttp.RequestHandler {
 			api.ErrorResponse(ctx, err)
 			return
 		}
+		// we could use validate.ValidateMap for validating form data;
+		// but we prefer to convert form data to struct in api.ReadRequest
 		err = validate.Struct(r)
 		if validationErrors, isErr := err.(validator.ValidationErrors); isErr {
 			errors := make(map[string]string, len(validationErrors))
