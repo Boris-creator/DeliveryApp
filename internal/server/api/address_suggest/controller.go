@@ -16,9 +16,9 @@ import (
 
 func HandleSuggest(ctx *fasthttp.RequestCtx) {
 	req, _ := api.ReadRequest[suggestRequest](ctx)
-
+	config, _ := config.LoadConfig()
 	conn, err := grpc.NewClient(
-		fmt.Sprintf("%s:%s", config.Config.GeoSuggestHost, config.Config.GeoSuggestPort),
+		fmt.Sprintf("%s:%s", config.GeoSuggestHost, config.GeoSuggestPort),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {

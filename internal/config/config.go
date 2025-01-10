@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
@@ -22,17 +23,23 @@ type AppConfig struct {
 	DbConfig
 }
 
-var Config = AppConfig{}
+var config AppConfig
+var once sync.Once
 
-func LoadConfig() error {
-	err := godotenv.Load(".env")
-	if err != nil {
-		return fmt.Errorf("Error loading config: %w", err)
-	}
+func LoadConfig() (AppConfig, error) {
+	var err error
 
-	Config, err = env.ParseAs[AppConfig]()
-	if err != nil {
-		return fmt.Errorf("Error loading config: %w", err)
-	}
-	return nil
+	once.Do(func() {
+		err = godotenv.Load(".env")
+		if err != nil {
+			err = fmt.Errorf("Error loading config: %w", err)
+		}
+
+		config, err = env.ParseAs[AppConfig]()
+		if err != nil {
+			err = fmt.Errorf("Error loading config: %w", err)
+		}
+	})
+
+	return config, nil
 }

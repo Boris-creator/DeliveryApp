@@ -12,11 +12,11 @@ import (
 )
 
 func StartServer() {
-	err := config.LoadConfig()
+	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	cfg := config.Config
+
 	c, err := models.Connect(cfg)
 	if err != nil {
 		log.Fatal(err)

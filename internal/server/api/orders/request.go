@@ -24,5 +24,5 @@ func (addr address) Address() addresses.Address {
 type SaveOrderRequest struct {
 	Address address `json:"address" validate:"required"`
 	Time    string  `json:"time" validate:"required,datetime=2006-01-02T15:04"`
-	Comment string  `json:"comment" validate:"gte=2,lte=250"`
+	Comment string  `json:"comment" validate:"omitempty,gte=2,lte=250"`
 }
