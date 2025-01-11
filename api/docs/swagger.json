@@ -1,0 +1,115 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/order": {
+            "post": {
+                "description": "saving new order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "create order",
+                "parameters": [
+                    {
+                        "description": "Order params",
+                        "name": "SaveOrderRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/orders.SaveOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details of the new order",
+                        "schema": {
+                            "$ref": "#/definitions/orders.orderResource"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "orders.SaveOrderRequest": {
+            "type": "object",
+            "required": [
+                "address",
+                "time"
+            ],
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/orders.address"
+                },
+                "comment": {
+                    "type": "string",
+                    "maxLength": 250,
+                    "minLength": 2
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "orders.address": {
+            "type": "object",
+            "properties": {
+                "fullAddress": {
+                    "type": "string"
+                },
+                "geo_lat": {
+                    "type": "string"
+                },
+                "geo_lon": {
+                    "type": "string"
+                }
+            }
+        },
+        "orders.orderAddressResource": {
+            "type": "object",
+            "properties": {
+                "fullAddress": {
+                    "type": "string",
+                    "example": "г Санкт-Петербург"
+                },
+                "geoLat": {
+                    "type": "number",
+                    "example": 59.939083
+                },
+                "geoLon": {
+                    "type": "number",
+                    "example": 30.31588
+                }
+            }
+        },
+        "orders.orderResource": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/orders.orderAddressResource"
+                },
+                "comment": {
+                    "type": "string",
+                    "example": "My pc is broken, so I can't accomplish my Golang project!"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1000
+                },
+                "time": {
+                    "type": "string",
+                    "example": "2028-01-01T13:00:00Z"
+                }
+            }
+        }
+    }
+}

@@ -8,6 +8,15 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+//	@BasePath		/api/v1
+//	@Summary		create order
+//	@Description	saving new order
+//	@Tags			orders
+//	@Accept			json
+//	@Produce		json
+//	@Param			SaveOrderRequest	body		SaveOrderRequest	true	"Order params"
+//	@Success		200					{object}	orderResource		"Details of the new order"
+//	@Router			/order [post]
 func SaveOrder(ctx *fasthttp.RequestCtx) {
 	req, _ := api.ReadRequest[SaveOrderRequest](ctx)
 	addr := req.Address.Address()
@@ -21,8 +30,7 @@ func SaveOrder(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	l := events.DefaultListeners
-	l.Dispatch("order:new", *o)
+	events.DefaultListeners.Dispatch("order:new", *o)
 
 	api.JsonResponse(ctx, toResource(*o))
 }

@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// TODO: add Swagger
 func HandleSuggest(ctx *fasthttp.RequestCtx) {
 	req, _ := api.ReadRequest[suggestRequest](ctx)
 	config, _ := config.LoadConfig()

@@ -1,0 +1,40 @@
+package router
+
+import (
+	"fmt"
+	"html/template"
+	"playground/internal/logger"
+
+	_ "playground/api/docs"
+
+	"github.com/fasthttp/router"
+	fastHttpSwagger "github.com/swaggo/fasthttp-swagger"
+	"github.com/valyala/fasthttp"
+)
+
+func webRoutes(r *router.Router) {
+	r.GET("/", func(ctx *fasthttp.RequestCtx) {
+		tmpl, err := template.ParseFiles("web/views/index.html")
+		if err != nil {
+			logger.Error(err)
+			return
+		}
+		ctx.SetContentType("text/html")
+		tmpl.Execute(ctx, struct {
+			Title   string
+			Content string
+		}{"Main Page", "Order form"})
+	})
+
+	r.GET("/swagger/{filepath:*}", fastHttpSwagger.WrapHandler())
+
+	r.ServeFilesCustom("/{filepath:*}", &fasthttp.FS{
+		Root:               "web/public",
+		IndexNames:         []string{"index.html", "index.js"},
+		GenerateIndexPages: true,
+		AcceptByteRange:    true,
+		PathNotFound: func(ctx *fasthttp.RequestCtx) {
+			fmt.Fprintf(ctx, "404 not found")
+		},
+	})
+}
