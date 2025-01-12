@@ -1,4 +1,4 @@
-FROM golang:1.23.2-bullseye
+FROM golang:1.23.2-bullseye AS builder
 
 WORKDIR /app
 
@@ -16,4 +16,14 @@ RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 WORKDIR /app/cmd/geo-suggest
+RUN make build
+
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install make -y
+WORKDIR /app
+COPY --from=builder /app/tmp/geo-suggest ./tmp/geo-suggest
+COPY --from=builder /app/cmd/geo-suggest/Makefile ./cmd/geo-suggest/Makefile
+WORKDIR /app/cmd/geo-suggest
+
 CMD make run

@@ -6,5 +6,5 @@ compile:
 	make compile
 build: compile
 	go build -o $(BINARY) .
-run: build 
+run: 
 	$(BINARY)
