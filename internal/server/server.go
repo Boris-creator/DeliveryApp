@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/valyala/fasthttp"
 	"playground/internal/config"
 	"playground/internal/models"
 	"playground/internal/server/router"
-
-	"github.com/valyala/fasthttp"
 )
 
 func StartServer() {
@@ -17,11 +16,10 @@ func StartServer() {
 		log.Fatal(err)
 	}
 
-	c, err := models.Connect(cfg)
+	_, err = models.Connect(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer c.Close()
 
 	r := router.MakeRouter()
 

@@ -2,17 +2,30 @@ package orders
 
 import (
 	"context"
+	"fmt"
+
 	"playground/internal/models"
 )
 
-func SaveOrder(ctx context.Context, order Order) (*Order, error) {
+func SaveOrder(ctx context.Context, order Order) (ord *Order, err error) {
 	tx, err := models.Conn.BeginTx(ctx, nil)
-	defer tx.Rollback()
+	defer func() {
+		if err != nil {
+			err = fmt.Errorf("failed saving order: %w", err)
+		}
+	}()
+	defer func() {
+		if err != nil {
+			err = tx.Rollback()
+		}
+	}()
+
 	if err != nil {
 		return nil, err
 	}
 
 	a := models.FromAddress(order.Address).ToAddressModel()
+
 	addr, err := a.FirstOrCreate(
 		"WHERE full_address = $1",
 		[]any{order.Address.FullAddress},
@@ -28,7 +41,11 @@ func SaveOrder(ctx context.Context, order Order) (*Order, error) {
 	}
 	mo := mOrder.ToOrderModel()
 	o, err := mo.Create()
-	tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
 	return &Order{
 		Id:      o.Id,
 		Address: addr.ToAddress(),

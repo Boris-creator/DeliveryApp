@@ -1,8 +1,9 @@
 package orders
 
 import (
-	"playground/internal/services/addresses"
 	"strconv"
+
+	"playground/internal/services/addresses"
 )
 
 type address struct {
@@ -14,6 +15,7 @@ type address struct {
 func (addr address) Address() addresses.Address {
 	geoLat, _ := strconv.ParseFloat(addr.GeoLat, 32)
 	geoLon, _ := strconv.ParseFloat(addr.GeoLon, 32)
+
 	return addresses.Address{
 		FullAddress: addr.FullAddress,
 		GeoLat:      float32(geoLat),
@@ -23,6 +25,6 @@ func (addr address) Address() addresses.Address {
 
 type SaveOrderRequest struct {
 	Address address `json:"address" validate:"required"`
-	Time    string  `json:"time" validate:"required,datetime=2006-01-02T15:04"`
+	Time    string  `json:"time"    validate:"required,datetime=2006-01-02T15:04"`
 	Comment string  `json:"comment" validate:"omitempty,gte=2,lte=250"`
 }

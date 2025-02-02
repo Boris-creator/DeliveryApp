@@ -3,15 +3,15 @@ package orders
 import "playground/internal/services/orders"
 
 type orderAddressResource struct {
-	FullAddress string  `json:"fullAddress" example:"г Санкт-Петербург"`
-	GeoLat      float32 `json:"geoLat" example:"59.939083"`
-	GeoLon      float32 `json:"geoLon" example:"30.31588"`
+	FullAddress string  `example:"г Санкт-Петербург"                json:"fullAddress"`
+	GeoLat      float32 `example:"59.939083"                        json:"geoLat"`
+	GeoLon      float32 `example:"30.31588"                         json:"geoLon"`
 }
 type orderResource struct {
-	Id      int                  `json:"id" example:"1000"`
-	Time    string               `json:"time" example:"2028-01-01T13:00:00Z"`
+	Id      int                  `example:"1000"                                                      json:"id"`
+	Time    string               `example:"2028-01-01T13:00:00Z"                                      json:"time"`
 	Address orderAddressResource `json:"address"`
-	Comment string               `json:"comment" example:"My pc is broken, so I can't accomplish my Golang project!"`
+	Comment string               `example:"My pc is broken, so I can't accomplish my Golang project!" json:"comment"`
 }
 
 func toResource(o orders.Order) orderResource {

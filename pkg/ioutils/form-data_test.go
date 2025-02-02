@@ -3,8 +3,9 @@ package ioutils_test
 import (
 	"bytes"
 	"mime/multipart"
-	"playground/pkg/ioutils"
 	"testing"
+
+	"playground/pkg/ioutils"
 )
 
 type test struct {
@@ -31,6 +32,7 @@ func TestReadFormToStruct(t *testing.T) {
 	w.Close()
 	r := multipart.NewReader(&b, w.Boundary())
 	form, _ := r.ReadForm(10000)
+
 	var target test
 
 	err := ioutils.ReadFormToStruct(form, &target)
@@ -41,12 +43,15 @@ func TestReadFormToStruct(t *testing.T) {
 	if target.F1 != v1 {
 		t.Errorf("want: %s, got: %s", v1, target.F1)
 	}
+
 	if target.F2 != v2 {
 		t.Errorf("failed to write to field by name")
 	}
+
 	if target.f3 != "" {
 		t.Errorf("write to unexported field")
 	}
+
 	if len(target.F4) != 2 || target.F4[0] != 1 || target.F4[1] != 2 {
 		t.Errorf("error while writing nested slice")
 	}

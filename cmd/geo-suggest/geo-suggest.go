@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+
 	geo_suggest "playground/internal/geo_suggest"
 )
 
@@ -10,5 +11,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	geo_suggest.StartServer(cfg)
 }

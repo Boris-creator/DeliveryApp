@@ -3,14 +3,14 @@ package models
 import "fmt"
 
 type Workshop struct {
-	Id        int     `db:"id" sql:"omit_on_insert"`
+	Id        int     `db:"id"         sql:"omit_on_insert"`
 	Name      *string `db:"name"`
 	AddressId int     `db:"address_id"`
 	CreatedAt string  `db:"created_at"`
 }
 
 func FindNearestWorkshop(lat, lon float32) (Workshop, error) {
-	//using https://github.com/zachasme/h3-pg
+	// using https://github.com/zachasme/h3-pg
 	resolution := 5
 	q := `WITH target as (
 		select 
@@ -57,8 +57,8 @@ func FindNearestWorkshop(lat, lon float32) (Workshop, error) {
 	  limit 
 		1;
 	  `
-	var w Workshop
 
+	var w Workshop
 	err := Conn.Unsafe().Get(&w, q, fmt.Sprintf("%.6f", lat), fmt.Sprintf("%.6f", lon), resolution)
 
 	return w, err

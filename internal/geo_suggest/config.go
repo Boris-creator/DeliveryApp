@@ -21,5 +21,6 @@ func LoadConfig() (config, error) {
 			return config{}, fmt.Errorf("Error initializing geo-suggest: %w", err)
 		}
 	}
+
 	return env.ParseAs[config]()
 }

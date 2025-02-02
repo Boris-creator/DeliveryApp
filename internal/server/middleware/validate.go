@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"encoding/json"
+
 	"playground/internal/server/api"
 
 	"github.com/go-playground/validator/v10"
@@ -10,10 +11,12 @@ import (
 
 func Validate[Rules any](rh fasthttp.RequestHandler) fasthttp.RequestHandler {
 	validate := validator.New(validator.WithRequiredStructEnabled())
+
 	return func(ctx *fasthttp.RequestCtx) {
 		r, err := api.ReadRequest[Rules](ctx)
 		if err != nil {
 			api.ErrorResponse(ctx, err)
+
 			return
 		}
 		// we could use validate.ValidateMap for validating form data;
@@ -27,12 +30,14 @@ func Validate[Rules any](rh fasthttp.RequestHandler) fasthttp.RequestHandler {
 
 			ctx.SetStatusCode(fasthttp.StatusUnprocessableEntity)
 			rw := json.NewEncoder(ctx)
-			rw.Encode(struct {
+			_ = rw.Encode(struct {
 				Errors  map[string]string `json:"errors"`
 				Message string            `json:"message"`
 			}{errors, err.Error()})
+
 			return
 		}
+
 		rh(ctx)
 	}
 }

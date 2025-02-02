@@ -23,8 +23,10 @@ type AppConfig struct {
 	DbConfig
 }
 
-var config AppConfig
-var once sync.Once
+var (
+	config AppConfig
+	once   sync.Once
+)
 
 func LoadConfig() (AppConfig, error) {
 	var err error
@@ -32,12 +34,12 @@ func LoadConfig() (AppConfig, error) {
 	once.Do(func() {
 		err = godotenv.Load(".env")
 		if err != nil {
-			err = fmt.Errorf("Error loading config: %w", err)
+			err = fmt.Errorf("error loading config: %w", err)
 		}
 
 		config, err = env.ParseAs[AppConfig]()
 		if err != nil {
-			err = fmt.Errorf("Error loading config: %w", err)
+			err = fmt.Errorf("error loading config: %w", err)
 		}
 	})
 

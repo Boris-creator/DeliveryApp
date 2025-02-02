@@ -3,13 +3,12 @@ package router
 import (
 	"fmt"
 	"html/template"
-	"playground/internal/logger"
-
-	_ "playground/api/docs"
 
 	"github.com/fasthttp/router"
 	fastHttpSwagger "github.com/swaggo/fasthttp-swagger"
 	"github.com/valyala/fasthttp"
+	_ "playground/api/docs"
+	"playground/internal/logger"
 )
 
 func webRoutes(r *router.Router) {
@@ -19,11 +18,16 @@ func webRoutes(r *router.Router) {
 			logger.Error(err)
 			return
 		}
+
 		ctx.SetContentType("text/html")
-		tmpl.Execute(ctx, struct {
+
+		err = tmpl.Execute(ctx, struct {
 			Title   string
 			Content string
 		}{"Main Page", "Order form"})
+		if err != nil {
+			logger.Error(err)
+		}
 	})
 
 	r.GET("/swagger/{filepath:*}", fastHttpSwagger.WrapHandler())

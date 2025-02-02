@@ -6,7 +6,7 @@ type Address struct {
 	FullAddress string  `db:"full_address"`
 	GeoLat      float32 `db:"geo_lat"`
 	GeoLon      float32 `db:"geo_lon"`
-	Id          int     `db:"id" sql:"omit_on_insert"`
+	Id          int     `db:"id"           sql:"omit_on_insert"`
 }
 
 type AddressModel = Model[Address]

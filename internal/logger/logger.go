@@ -17,12 +17,13 @@ func Error(err error, args ...any) {
 
 func Init() {
 	var lout io.Writer = os.Stdout
+
 	logFile, err := os.OpenFile("./logs/log.jsonl", os.O_APPEND|os.O_CREATE|os.O_WRONLY, os.ModePerm)
 	if err == nil {
 		lout = io.MultiWriter(logFile, os.Stdout)
 	}
 
-	skipDepth := 8 //found experimentally
+	skipDepth := 8 // found experimentally
 	logger := slog.New(slog.NewJSONHandler(
 		lout,
 		&slog.HandlerOptions{
@@ -30,7 +31,7 @@ func Init() {
 			ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
 				if a.Key == slog.SourceKey {
 					pc := make([]uintptr, 1)
-					l := runtime.Callers(skipDepth, pc[:])
+					l := runtime.Callers(skipDepth, pc)
 					frames := runtime.CallersFrames(pc[:l])
 					frame, _ := frames.Next()
 

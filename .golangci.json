@@ -1,0 +1,34 @@
+{
+    "linters": {
+        "enable-all": true,
+        "disable": [
+            "wrapcheck",
+            "gci",
+            "gofumpt"
+        ]
+    },
+    "linters-settings": {
+        "depguard": {
+            "rules": {
+                "main": {
+                    "files": "$all",
+                    "list-mode": "lax",
+                    "allow": ["$all"],
+                    "deny": {}
+                }
+            }
+        },
+        "lll": {
+            "line-length": 125
+        },
+        "wsl": {
+            "allow-assign-and-anything": true
+        },
+        "godot": {
+            "period": false
+        },
+        "nlreturn": {
+            "block-size": 2
+        }
+    }
+}

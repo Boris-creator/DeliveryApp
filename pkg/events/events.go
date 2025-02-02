@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-
 	"slices"
 	"sync"
 )
@@ -32,13 +31,19 @@ func New() *Listeners {
 	return &Listeners{channels: make(map[string][]chan Event[any])}
 }
 
-func (l *Listeners) AddListener(ctx context.Context, ev string, handler func(Event[any]), options ...func(opts *ListenOptions)) (removeListener func()) {
+func (l *Listeners) AddListener(
+	ctx context.Context,
+	ev string,
+	handler func(Event[any]),
+	options ...func(opts *ListenOptions),
+) (removeListener func()) {
 	var opts ListenOptions
 	for _, opt := range options {
 		opt(&opts)
 	}
 
 	ch := make(chan Event[any])
+
 	l.mu.Lock()
 	defer l.mu.Unlock()
 	l.channels[ev] = append(l.channels[ev], ch)
@@ -50,8 +55,10 @@ func (l *Listeners) AddListener(ctx context.Context, ev string, handler func(Eve
 				if !ok {
 					break
 				}
+
 				l.wg.Done()
 				handler(e)
+
 				if opts.Once {
 					l.removeListener(ev, ch)
 				}
@@ -78,11 +85,14 @@ func (l *Listeners) Dispatch(e string, payload any) error {
 		Name:    e,
 		Payload: payload,
 	}
+
 	chans, ok := l.channels[event.Name]
 	if !ok {
 		return fmt.Errorf("%w: %s", UnknownEventError, event.Name)
 	}
+
 	l.wg.Add(len(chans))
+
 	for _, ch := range chans {
 		ch <- event
 	}
