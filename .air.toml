@@ -1,7 +1,0 @@
-root = "."
-tmp_dir = "tmp"
-
-[build]
-cmd = "make build -f ./cmd/server/Makefile"
-bin = "tmp/server"
-exclude_dir = ["web/public"]
